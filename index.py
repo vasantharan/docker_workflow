@@ -15,6 +15,10 @@ knn_model = load('./KNN.joblib')
 class input(BaseModel):
     features: list
 
+@app.get("/home")
+def home():
+    return {"message": "This is a home page"}
+
 @app.get("/about")
 def test():
     return {"hello world": "hello world"}
