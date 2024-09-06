@@ -23,12 +23,3 @@ jobs:
       
       - name: Push image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/test:latest
-
-      - name: Remove previous image
-        run: |
-          if [ -f ".previous_tag" ]; then
-            PREVIOUS_TAG=$(cat .previous_tag)
-            echo "Removing previous image: ${{ secrets.DOCKER_USERNAME }}/your-image-name:$PREVIOUS_TAG"
-            curl -s -u ${{ secrets.DOCKER_USERNAME }}:${{ secrets.DOCKER_ACCESS_TOKEN }} \
-              -X DELETE "https://hub.docker.com/v2/repositories/${{ secrets.DOCKER_USERNAME }}/test/tags/$PREVIOUS_TAG/"
-          fi
