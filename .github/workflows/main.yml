@@ -19,7 +19,7 @@ jobs:
           password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
       - name: Build image 
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/test:latest
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/test:latest .
       
       - name: Push image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/test:lastest
@@ -32,13 +32,3 @@ jobs:
             curl -s -u ${{ secrets.DOCKER_USERNAME }}:${{ secrets.DOCKER_ACCESS_TOKEN }} \
               -X DELETE "https://hub.docker.com/v2/repositories/${{ secrets.DOCKER_USERNAME }}/test/tags/$PREVIOUS_TAG/"
           fi
-
-      - name: Save current tag for future reference
-        run: echo ${{ env.COMMIT_MSG }} > .previous_tag
-        continue-on-error: true
-
-      - name: Upload previous tag artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: previous-tag
-          path: .previous_tag
