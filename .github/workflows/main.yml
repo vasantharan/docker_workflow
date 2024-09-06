@@ -22,7 +22,7 @@ jobs:
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/test:latest .
       
       - name: Push image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/test:lastest
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/test:latest
 
       - name: Remove previous image
         run: |
