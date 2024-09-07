@@ -20,6 +20,21 @@ jobs:
 
       - name: Build image 
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/test:latest .
+
+      - name: Delete the previous image
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+          REPOSITORY: test
+        run: |
+          AUTH_TOKEN=$(curl -s -X POST "https://hub.docker.com/v2/users/login/" \
+            -H "Content-Type: application/json" \
+            -d "{\"username\": \"${DOCKER_HUB_USERNAME}\", \"password\": \"${DOCKER_HUB_ACCESS_TOKEN}\"}" \
+            | jq -r .token)
+          
+          echo "Deleting 'latest' tag from repository: ${REPOSITORY}"
+          curl -s -X DELETE "https://hub.docker.com/v2/repositories/${DOCKER_HUB_USERNAME}/${REPOSITORY}/tags/latest/" \
+            -H "Authorization: JWT $AUTH_TOKEN" || echo "'latest' tag not found or already deleted"
       
       - name: Push image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/test:latest
